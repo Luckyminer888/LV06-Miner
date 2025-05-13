@@ -1,0 +1,134 @@
+<ng-template #loading>
+    <h4>Loading...</h4>
+</ng-template>
+<ng-container>
+
+
+    <div class="container">
+        <div>
+            <div class="card">
+                <h2>Overview</h2>
+                <table *ngIf="info$ | async as info; else loading">
+                    <tr>
+                        <td>Model:</td>
+                        <td>{{info.ASICModel == 'BM1397' ? 'LV05' : 'LV06'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Uptime:</td>
+                        <td>{{info.uptimeSeconds | dateAgo}}</td>
+                    </tr>
+                    <tr>
+                        <td>WiFi Status:</td>
+                        <td>{{info.wifiStatus}}</td>
+                    </tr>
+                    <tr>
+                        <td>Free Heap Memory:</td>
+                        <td>{{info.freeHeap}}</td>
+                    </tr>
+                    <tr>
+                        <td>Version:</td>
+                        <td>{{info.version}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card">
+                <h2>Pool Information</h2>
+                <table *ngIf="info$ | async as info; else loading">
+                    <tr *ngIf="quickLink$ | async as quickLink">
+                        <td>Quick Link:</td>
+                        <td><a style="color: white;" [href]="quickLink" target="_blank">{{quickLink}}</a></td>
+                    </tr>
+                    <tr>
+                        <td>URL:</td>
+                        <td>{{info.stratumURL}}</td>
+                    </tr>
+                    <tr>
+                        <td>Port:</td>
+                        <td>{{info.stratumPort}}</td>
+                    </tr>
+                    <tr>
+                        <td>User:</td>
+                        <td>{{info.stratumUser}}</td>
+                    </tr>
+                    <tr>
+                        <td>Shares Accepted:</td>
+                        <td>{{info.sharesAccepted}}</td>
+                    </tr>
+                    <tr>
+                        <td>Shares Rejected:</td>
+                        <td>{{info.sharesRejected}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <h2>Power</h2>
+
+                <table *ngIf="info$ | async as info; else loading">
+                    <tr>
+                        <td>Power Consumption:</td>
+                        <td>{{info.power | number: '1.2-2'}} <small>W</small> </td>
+                    </tr>
+                    <tr>
+                        <td>Input Voltage:</td>
+                        <td>{{info.voltage | number: '0.0-0'}} <small>mV</small></td>
+                    </tr>
+                    <tr>
+                        <td>Input Current:</td>
+                        <td>{{info.current | number: '0.0-0'}} <small>mA</small></td>
+                    </tr>
+                    <tr>
+                        <td>Frequency:</td>
+                        <td>{{info.frequency}} <small>Mhz</small></td>
+                    </tr>
+                    <tr>
+                        <td>Measured Core Voltage:</td>
+                        <td>{{info.coreVoltageActual}} <small>mV</small></td>
+                    </tr>
+                    <tr>
+                        <td>Core Voltage:</td>
+                        <td>{{info.coreVoltage}} <small>mV</small></td>
+                    </tr>
+                    <tr>
+                        <td>Fan Speed:</td>
+                        <td>{{info.fanSpeed}} <small>RPM</small></td>
+                    </tr>
+                    <tr>
+                        <td>Chip Temperature:</td>
+                        <td>{{info.temp}} <small>C</small></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="card">
+                <h2>Results</h2>
+                <table *ngIf="info$ | async as info; else loading">
+                    <tr>
+                        <td> Hash Rate:</td>
+                        <td>{{info.hashRate | number: '1.2-2'}} <small>Gh/s</small></td>
+                    </tr>
+                    <tr>
+                        <td>Efficiency:</td>
+                        <td>{{info.power / (info.hashRate/1000) | number: '1.2-2'}} <small>W/Th</small></td>
+                    </tr>
+                    <tr>
+                        <td>Best Difficulty:</td>
+                        <td>{{info.bestDiff}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <h2>Realtime Logs <button (click)="toggleLogs()" style="margin-left: 15px;" class="btn btn-secondary">{{showLogs
+                ? 'Hide': 'Show'}}
+                Logs</button></h2>
+
+        <div *ngIf="showLogs" id="logs" #scrollContainer>
+            <div *ngFor="let log of logs">₿ {{log | ANSI}}</div>
+        </div>
+    </div>
+</ng-container>
